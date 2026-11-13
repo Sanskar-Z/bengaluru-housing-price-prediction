@@ -1,12 +1,20 @@
+import logging
+
 from fastapi import APIRouter, HTTPException, Query
 
+from app.schemas.response import LocationListResponse
 from app.services.analytics_service import get_locations
 
 
 router = APIRouter()
 
+logger = logging.getLogger(__name__)
 
-@router.get("/locations")
+
+@router.get(
+    "/locations",
+    response_model=LocationListResponse
+)
 def locations_list(
     search: str | None = Query(default=None, min_length=1)
 ):
@@ -14,9 +22,11 @@ def locations_list(
         locations = get_locations()
 
         if search:
+            search_term = search.strip().lower()
+
             locations = [
                 item for item in locations
-                if search.strip().lower() in item["location"].lower()
+                if search_term in item["location"].lower()
             ]
 
         return {
@@ -25,12 +35,16 @@ def locations_list(
         }
 
     except FileNotFoundError:
+        logger.exception("Dataset file is missing.")
+
         raise HTTPException(
             status_code=503,
-            detail="Dataset not found."
+            detail="Housing dataset is currently unavailable."
         )
 
     except Exception:
+        logger.exception("Failed to retrieve locations.")
+
         raise HTTPException(
             status_code=500,
             detail="Unable to retrieve locations."

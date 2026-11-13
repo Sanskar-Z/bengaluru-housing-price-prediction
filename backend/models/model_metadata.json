@@ -1,0 +1,45 @@
+{
+    "model_name": "CatBoostRegressor",
+    "model_type": "regression",
+    "target": "price",
+    "features": [
+        "area_type",
+        "availability",
+        "location",
+        "bath",
+        "balcony",
+        "bhk_num",
+        "total_sqft_cleaned"
+    ],
+    "categorical_features": [
+        "area_type",
+        "availability",
+        "location"
+    ],
+    "numeric_features": [
+        "bath",
+        "balcony",
+        "bhk_num",
+        "total_sqft_cleaned"
+    ],
+    "hyperparameters": {
+        "iterations": 500,
+        "learning_rate": 0.05,
+        "depth": 6,
+        "loss_function": "RMSE",
+        "random_seed": 42
+    },
+    "test_metrics": {
+        "r2": 0.8087,
+        "rmse": 34.1782,
+        "mae": 19.539
+    },
+    "dataset_records": 11532,
+    "training_records": 9225,
+    "testing_records": 2307,
+    "versions": {
+        "catboost": "1.2.10",
+        "scikit_learn": "1.6.1"
+    },
+    "created_at_utc": "2026-11-12T19:07:51.711908+00:00"
+}

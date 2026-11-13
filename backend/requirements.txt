@@ -1,10 +1,19 @@
+# Backend Framework
 fastapi
 uvicorn[standard]
+
+# Machine Learning
 catboost==1.2.10
+
+# Data Processing
 pandas
 numpy
+
+# Configuration and Validation
 pydantic
 pydantic-settings
 python-dotenv
+
+# Testing
 pytest
 httpx

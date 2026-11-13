@@ -218,3 +218,34 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+
+# Environment example files
+.env.*
+!.env.example
+
+# IDE settings
+.vscode/
+.idea/
+
+# Node.js frontend
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Frontend build output
+dist/
+build/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+
+# Application logs
+logs/

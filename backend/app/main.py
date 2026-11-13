@@ -6,11 +6,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.api.v1.router import api_router
 from app.services.model_service import model_service
+from app.core.exceptions import register_exception_handlers
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Load the trained model when the application starts.
     model_service.load()
     yield
 
@@ -18,9 +18,16 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
-    description="Machine Learning Based Bengaluru Housing Price Prediction API",
+    description=(
+        "Machine Learning Based Bengaluru Housing Price Prediction API. "
+        "Provides house price predictions, batch predictions, "
+        "dataset analytics, BHK analytics, area-type analytics, "
+        "and location-based property insights."
+    ),
     lifespan=lifespan
 )
+
+register_exception_handlers(app)
 
 
 app.add_middleware(
@@ -38,7 +45,7 @@ app.include_router(
 )
 
 
-@app.get("/")
+@app.get("/", tags=["General"])
 def root():
     return {
         "message": "Bengaluru Housing Price Prediction API",

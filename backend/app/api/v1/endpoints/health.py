@@ -9,7 +9,6 @@ router = APIRouter()
 
 @router.get("/health", response_model=HealthResponse)
 def health_check():
-
     model_loaded = model_service.model is not None
 
     return HealthResponse(
