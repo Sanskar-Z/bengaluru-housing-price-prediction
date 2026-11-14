@@ -38,3 +38,21 @@ export const getLocationAnalytics = async (
 
     return response.data;
 };
+
+export interface BudgetTierItem {
+    tier: string;
+    count: number;
+    percentage: number;
+    color: string;
+}
+
+export interface BudgetTierResponse {
+    total_properties: number;
+    tiers: BudgetTierItem[];
+    message: string;
+}
+
+export const getBudgetTierAnalytics = async (): Promise<BudgetTierResponse> => {
+    const response = await api.get<BudgetTierResponse>("/analytics/budget-tiers");
+    return response.data;
+};

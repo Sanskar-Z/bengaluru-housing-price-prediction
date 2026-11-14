@@ -28,7 +28,9 @@ import {
 } from "recharts";
 
 import { getDashboardSummary } from "../../src/services/dashboardService";
+import { getBudgetTierAnalytics, type BudgetTierResponse } from "../../src/services/analyticsService";
 import type { DashboardSummary } from "../../src/types/dashboard";
+import BudgetTierDistribution from "../../src/components/charts/BudgetTierDistribution";
 
 const CHART_COLORS = [
     "#2563eb",
@@ -43,6 +45,7 @@ const CHART_COLORS = [
 
 export default function MarketAnalyticsPage() {
     const [summary, setSummary] = useState<DashboardSummary | null>(null);
+    const [budgetData, setBudgetData] = useState<BudgetTierResponse | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
@@ -52,8 +55,15 @@ export default function MarketAnalyticsPage() {
                 setLoading(true);
                 setError("");
 
-                const data = await getDashboardSummary();
+                const [data, tiers] = await Promise.all([
+                    getDashboardSummary(),
+                    getBudgetTierAnalytics().catch((err) => {
+                        console.warn("Budget tiers error:", err);
+                        return null;
+                    }),
+                ]);
                 setSummary(data);
+                if (tiers) setBudgetData(tiers);
             } catch (err) {
                 console.error("Market analytics error:", err);
                 setError("Unable to load market analytics. Please try again.");
@@ -395,6 +405,16 @@ export default function MarketAnalyticsPage() {
                 </div>
 
             </section>
+
+            {/* Market Budget Tier Segmentation */}
+            {budgetData && (
+                <section>
+                    <BudgetTierDistribution
+                        data={budgetData.tiers}
+                        totalProperties={budgetData.total_properties}
+                    />
+                </section>
+            )}
 
             {/* Top Locations */}
 

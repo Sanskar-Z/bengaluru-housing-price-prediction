@@ -19,9 +19,12 @@ import {
 import {
     predictPropertyPrice,
     getLocations,
+    getSensitivityCurve,
     type PredictionResponse,
+    type SensitivityResponse,
     type LocationItem,
 } from "../../src/services/predictionService";
+import SensitivityCurve from "../../src/components/charts/SensitivityCurve";
 
 interface PredictionForm {
     area_type: string;
@@ -55,6 +58,7 @@ export default function PredictionPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [result, setResult] = useState<PredictionResponse | null>(null);
+    const [sensitivityData, setSensitivityData] = useState<SensitivityResponse | null>(null);
 
     // Fetch supported locations from FastAPI
     useEffect(() => {
@@ -133,6 +137,7 @@ export default function PredictionPage() {
         setLocationQuery(item.location);
         setShowLocationOptions(false);
         setResult(null);
+        setSensitivityData(null);
         setError("");
     };
 
@@ -143,6 +148,7 @@ export default function PredictionPage() {
 
         setError("");
         setResult(null);
+        setSensitivityData(null);
 
         if (!form.location) {
             setError("Please select a location from the dropdown.");
@@ -163,9 +169,26 @@ export default function PredictionPage() {
 
 
         try {
-            const response = await predictPropertyPrice(form);
+            const [response, sensitivity] = await Promise.all([
+                predictPropertyPrice(form),
+                getSensitivityCurve({
+                    area_type: form.area_type,
+                    availability: form.availability,
+                    location: form.location,
+                    bath: form.bath,
+                    balcony: form.balcony,
+                    bhk_num: form.bhk_num,
+                    current_sqft: form.total_sqft_cleaned,
+                }).catch((curveErr) => {
+                    console.warn("Sensitivity curve error:", curveErr);
+                    return null;
+                }),
+            ]);
 
             setResult(response);
+            if (sensitivity) {
+                setSensitivityData(sensitivity);
+            }
         } catch (err: unknown) {
             console.error("Prediction failed:", err);
 
@@ -621,6 +644,13 @@ export default function PredictionPage() {
                         <span>Location: {form.location}</span>
                     </div>
 
+                </section>
+            )}
+
+            {/* Price Sensitivity Curve Section */}
+            {sensitivityData && (
+                <section className="mt-8">
+                    <SensitivityCurve data={sensitivityData} />
                 </section>
             )}
 

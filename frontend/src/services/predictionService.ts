@@ -42,3 +42,36 @@ export const getLocations = async (): Promise<LocationsResponse> => {
 
     return response.data;
 };
+
+export interface SensitivityPoint {
+    sqft: number;
+    predicted_price: number;
+}
+
+export interface SensitivityRequest {
+    area_type: string;
+    availability: string;
+    location: string;
+    bath: number;
+    balcony: number;
+    bhk_num: number;
+    current_sqft: number;
+}
+
+export interface SensitivityResponse {
+    location: string;
+    current_point: SensitivityPoint;
+    curve: SensitivityPoint[];
+    message: string;
+}
+
+export const getSensitivityCurve = async (
+    data: SensitivityRequest
+): Promise<SensitivityResponse> => {
+    const response = await api.post<SensitivityResponse>(
+        "/predict/sensitivity",
+        data
+    );
+
+    return response.data;
+};
