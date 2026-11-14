@@ -297,3 +297,47 @@ def get_area_type_analytics() -> dict:
         "area_type_analytics": analytics,
         "price_unit": "Dataset unit (unconfirmed)"
     }
+
+
+def get_budget_tier_analytics() -> dict:
+    data = load_dataset()
+    valid_data = data[data["price"].notna()]
+    total_properties = len(valid_data)
+
+    affordable_count = int((valid_data["price"] < 50).sum())
+    mid_count = int(((valid_data["price"] >= 50) & (valid_data["price"] < 100)).sum())
+    premium_count = int(((valid_data["price"] >= 100) & (valid_data["price"] < 200)).sum())
+    luxury_count = int((valid_data["price"] >= 200).sum())
+
+    tiers = [
+        {
+            "tier": "Affordable (< ₹50 Lakhs)",
+            "count": affordable_count,
+            "percentage": round((affordable_count / total_properties) * 100, 2),
+            "color": "#38bdf8"
+        },
+        {
+            "tier": "Mid-Market (₹50 Lakhs - ₹1 Crore)",
+            "count": mid_count,
+            "percentage": round((mid_count / total_properties) * 100, 2),
+            "color": "#3b82f6"
+        },
+        {
+            "tier": "Premium (₹1 Crore - ₹2 Crores)",
+            "count": premium_count,
+            "percentage": round((premium_count / total_properties) * 100, 2),
+            "color": "#8b5cf6"
+        },
+        {
+            "tier": "Ultra-Luxury (> ₹2 Crores)",
+            "count": luxury_count,
+            "percentage": round((luxury_count / total_properties) * 100, 2),
+            "color": "#ec4899"
+        }
+    ]
+
+    return {
+        "total_properties": total_properties,
+        "tiers": tiers,
+        "message": "Budget tier distribution retrieved successfully."
+    }

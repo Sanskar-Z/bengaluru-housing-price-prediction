@@ -95,3 +95,16 @@ class AreaTypeAnalyticsResponse(BaseModel):
     total_area_types: int
     area_type_analytics: list[AreaTypeAnalyticsItem]
     price_unit: str
+
+
+class BudgetTierItem(BaseModel):
+    tier: str
+    count: int
+    percentage: float
+    color: str
+
+
+class BudgetTierResponse(BaseModel):
+    total_properties: int
+    tiers: list[BudgetTierItem]
+    message: str = "Budget tier distribution retrieved successfully."

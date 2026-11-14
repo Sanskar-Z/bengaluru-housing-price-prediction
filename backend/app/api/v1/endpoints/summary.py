@@ -6,14 +6,16 @@ from app.schemas.response import (
     DatasetSummaryResponse,
     LocationAnalyticsResponse,
     BHKAnalyticsResponse,
-    AreaTypeAnalyticsResponse
+    AreaTypeAnalyticsResponse,
+    BudgetTierResponse
 )
 
 from app.services.analytics_service import (
     get_dataset_summary,
     get_location_analytics,
     get_bhk_analytics,
-    get_area_type_analytics
+    get_area_type_analytics,
+    get_budget_tier_analytics
 )
 
 
@@ -129,4 +131,27 @@ def area_type_analytics():
         raise HTTPException(
             status_code=500,
             detail="Unable to generate area type analytics."
+        )
+
+
+@router.get(
+    "/analytics/budget-tiers",
+    response_model=BudgetTierResponse
+)
+def budget_tier_analytics():
+    try:
+        return get_budget_tier_analytics()
+
+    except FileNotFoundError:
+        logger.exception("Dataset file is missing.")
+        raise HTTPException(
+            status_code=503,
+            detail="Housing dataset is currently unavailable."
+        )
+
+    except Exception:
+        logger.exception("Failed to generate budget tier analytics.")
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to generate budget tier analytics."
         )
