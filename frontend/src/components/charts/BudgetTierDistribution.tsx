@@ -49,8 +49,8 @@ export default function BudgetTierDistribution({
                             outerRadius={105}
                             innerRadius={55}
                             paddingAngle={3}
-                            label={({ name, percent }) =>
-                                `${name.split(" ")[0]}: ${((percent ?? 0) * 100).toFixed(1)}%`
+                            label={({ name, percent }: { name?: string; percent?: number }) =>
+                                `${(name ?? "").split(" ")[0]}: ${((percent ?? 0) * 100).toFixed(1)}%`
                             }
                         >
                             {chartData.map((entry) => (
