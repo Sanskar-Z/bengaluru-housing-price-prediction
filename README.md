@@ -1,24 +1,26 @@
 # Bengaluru Housing Price Prediction
 
-**Machine Learning-Based Real Estate Price Prediction and Interactive Dashboard for the Bengaluru Housing Market.**
+**EstateIQ — Machine Learning-Based Real Estate Price Prediction and Interactive Housing Analytics Dashboard for Bengaluru.**
 
 ## Overview
 
 Bengaluru Housing Price Prediction is a machine learning-based project designed to estimate residential property prices in Bengaluru using property-related features.
 
-The project combines a trained CatBoost regression model with a FastAPI backend to provide housing price predictions, batch predictions, and housing market analytics through REST APIs.
+The project combines a trained CatBoost regression model, a FastAPI backend, and a Next.js frontend to provide property price predictions and interactive housing market analytics.
 
-An interactive dashboard built with React is planned as the frontend interface for exploring predictions and market insights.
+The application, called **EstateIQ**, allows users to explore housing market statistics, analyze individual locations, understand model performance, and estimate property prices using their property details.
 
 ## Key Features
 
-- **House Price Prediction:** Predict estimated property prices using property characteristics.
-- **Batch Prediction:** Generate predictions for multiple properties in a single request.
-- **Housing Market Analytics:** Explore dataset-level statistics and price distributions.
-- **Location Analytics:** Analyze housing listings and price statistics for individual locations.
-- **BHK Analytics:** Compare listing counts and price statistics across BHK categories.
-- **Area Type Analytics:** Explore price and area statistics across different property area types.
-- **Location Search:** Search available Bengaluru housing locations.
+- **House Price Prediction:** Estimate residential property prices using property characteristics.
+- **Interactive Prediction Form:** Enter property details and select locations using a searchable dropdown.
+- **Batch Prediction:** Generate predictions for multiple properties through the backend API.
+- **Housing Market Analytics:** Explore overall dataset statistics and housing distributions.
+- **Location Analytics:** Analyze listing counts, price statistics, and BHK distributions for individual locations.
+- **BHK Analytics:** Explore the distribution of properties across different BHK configurations.
+- **Area Type Analytics:** Compare property listings across different area types.
+- **Location Search:** Browse available Bengaluru housing locations.
+- **Model Performance:** View model information, evaluation metrics, and training details.
 
 ## Technology Stack
 
@@ -28,7 +30,11 @@ An interactive dashboard built with React is planned as the frontend interface f
 | Backend | FastAPI, Uvicorn |
 | Data Processing | Pandas, NumPy |
 | Validation | Pydantic |
-| Frontend | React, JavaScript |
+| Frontend | Next.js 16, React 19, TypeScript |
+| Styling | Tailwind CSS |
+| Data Visualization | Recharts |
+| HTTP Client | Axios |
+| Icons | Lucide React |
 | Testing | Pytest, HTTPX |
 
 ## Project Structure
@@ -51,28 +57,37 @@ bengaluru-housing-price-prediction/
 │   └── README.md
 │
 ├── frontend/
+│   ├── app/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── services/
+│   │   └── types/
+│   ├── public/
+│   ├── package.json
+│   └── .env.local
 │
 ├── docs/
-│
 ├── .gitignore
 └── README.md
 ```
 
 ## Machine Learning Model
 
-The project uses a CatBoost Regressor trained on the Bengaluru housing dataset.
+The project uses a **CatBoost Regressor** trained on the Bengaluru housing dataset.
 
-The model uses the following input features:
+### Input Features
 
-- Area Type
-- Availability
-- Location
-- Bathroom Count
-- Balcony Count
-- BHK Configuration
-- Total Square Feet
+The model uses seven property-related features:
 
-**Model Evaluation Results:**
+1. Area Type
+2. Availability
+3. Location
+4. Bathroom Count
+5. Balcony Count
+6. BHK Configuration
+7. Total Square Feet
+
+### Model Evaluation Results
 
 | Metric | Value |
 |---|---:|
@@ -80,7 +95,9 @@ The model uses the following input features:
 | RMSE | 34.1782 |
 | MAE | 19.539 |
 
-*Note: The price unit is not yet independently verified against the dataset documentation.*
+**Evaluation note:** The test partition participated in model selection. Therefore, these metrics should be treated as indicative rather than as a fully independent estimate of generalization performance. Further evaluation using an untouched holdout dataset is recommended.
+
+**Price unit:** The price unit has not yet been independently verified against the dataset documentation.
 
 ## Backend Setup
 
@@ -128,7 +145,7 @@ pip install -r requirements.txt
 
 ### 6. Configure environment variables
 
-Copy `.env.example` to `.env` and update the values if necessary.
+If the backend provides an `.env.example` file, copy it to `.env` and configure the required values.
 
 **Windows PowerShell:**
 
@@ -146,11 +163,54 @@ The backend will run at:
 
 `http://127.0.0.1:8000`
 
+## Frontend Setup
+
+### Prerequisites
+
+- Node.js
+- npm
+
+### 1. Navigate to the frontend
+
+Open a new terminal from the project root:
+
+```bash
+cd frontend
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Configure environment variables
+
+Create a `.env.local` file in the frontend directory:
+
+```env
+NEXT_PUBLIC_API_URL=http://127.0.0.1:8000
+```
+
+This variable specifies the FastAPI backend URL used by the frontend.
+
+### 4. Start the development server
+
+```bash
+npm run dev
+```
+
+The frontend will run at:
+
+`http://localhost:3000`
+
+**Important:** Run the backend and frontend in separate terminals.
+
 ## API Documentation
 
 FastAPI provides interactive API documentation through Swagger UI.
 
-Once the server is running, visit:
+Once the backend server is running, visit:
 
 `http://127.0.0.1:8000/docs`
 
@@ -171,26 +231,33 @@ Once the server is running, visit:
 
 ## Running Tests
 
-From the backend directory:
+From the backend directory, activate the virtual environment and execute:
 
 ```bash
 pytest -v
 ```
 
-The backend currently has **20 passing automated tests**.
+The backend test suite previously reported **20 passing automated tests**.
 
 ## Future Enhancements
 
-- Develop an interactive React dashboard.
-- Add visualizations for housing price trends and distributions.
-- Integrate frontend forms with prediction APIs.
-- Improve model evaluation using additional validation data.
-- Prepare the application for containerization and deployment.
+- Evaluate the model using an untouched holdout dataset or nested cross-validation.
+- Improve prediction accuracy and robustness through additional feature engineering.
+- Add more detailed housing market visualizations and comparisons.
+- Improve application deployment and production configuration.
+- Explore containerization and cloud deployment.
 
 ## Project Status
 
-Backend API and machine learning integration implemented. Frontend development and deployment are planned.
+- Machine learning model trained and integrated.
+- FastAPI backend and REST API endpoints implemented.
+- Backend automated tests implemented.
+- Next.js frontend dashboard implemented.
+- Property price prediction interface implemented.
+- Market analytics and location analytics pages implemented.
+- Model performance page implemented.
+- Deployment and further model evaluation remain future improvements.
 
 ## License
 
-Add the project's chosen license here before distributing the project.
+Add the project's chosen license before distributing the project.
